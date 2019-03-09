@@ -1,14 +1,16 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.11.0"
 
-set :application, "my_app_name"
-set :repo_url, "git@example.com:me/my_repo.git"
+set :application, "wt_blog"
+set :repo_url, "git@github.com:timcase/wt_blog"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :rbenv_ruby, '2.6.0'
 
 # Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, "/var/www/my_app_name"
+set :deploy_to, "/var/www/wt_blog"
+set :linked_dirs, fetch(:linked_dirs, []) << '.bundle'
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -36,4 +38,15 @@ set :repo_url, "git@example.com:me/my_repo.git"
 # set :keep_releases, 5
 
 # Uncomment the following to require manually verifying the host key before first deploy.
-# set :ssh_options, verify_host_key: :secure
+#false set :ssh_options, verify_host_key: :secure
+after 'deploy:published', 'jekyll:build'
+namespace :jekyll do
+  desc 'Build jekyll'
+  task :build do
+    on roles(:all) do
+      within current_path do
+        execute "cd /var/www/wt_blog/current && /home/rails/.rbenv/shims/bundle exec jekyll build"
+      end
+    end
+  end
+end
