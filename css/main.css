@@ -39,6 +39,9 @@ blockquote {
 blockquote p:first-child {
   margin-top: 0;
 }
+ul {
+  list-style-type: none;
+}
 hr.small {
   max-width: 100px;
   margin: 15px auto;
